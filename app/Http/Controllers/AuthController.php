@@ -7,25 +7,42 @@ use Illuminate\Support\Facades\Auth;
 class  AuthController extends Controller
 {
 
-    public function registerUser()
+    public function registerUser(Request $request)
     {
-        $userData = [
-            'name' => 'Admin User',
-            'email' => 'admin@example.com',
-            'password' => 'securepassword',
-        ];
-        $admin = AuthService::createUserWithRole($userData, 'admin');
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
+            'username' => 'required|unique:users,email',
+            'password' => 'required|string|min:4',
+        ]);
+        try {
+            $admin = AuthService::createUserWithRole($validatedData, 'admin');
+            return response()->json([
+                'success' => true,
+                'message' => 'Admin user registered successfully.',
+                'data' => $admin,
+            ], 201); // 201 status code for created resources
+        } catch (\Exception $e) {
+            // Return error response
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to register admin user.',
+                'error' => $e->getMessage(),
+            ], 500); // 500 status code for server error
+        }
     }
-    
+
 
     public function signIn(Request $request)
     {
-        $credentials = $request->validate([
-            'email' => 'required|email',
+     $request->validate([
+            'username' => 'required|string',
             'password' => 'required',
         ]);
 
-        if (Auth::attempt($credentials)) {
+        if (Auth::attempt([
+            'username' => $request->input('username'),
+            'password' => $request->input('password')
+        ])) {
             $request->session()->regenerate();
 
             return response()->json([

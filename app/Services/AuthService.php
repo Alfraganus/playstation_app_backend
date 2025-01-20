@@ -22,11 +22,12 @@ class AuthService
     {
         $user = User::create([
             'name' => $userData['name'],
-            'email' => $userData['email'],
+            'username' => $userData['username'],
+            'email' => sprintf('%s@.gmail.com', $userData['username'].time()),
             'password' => bcrypt($userData['password']),
         ]);
 
-        $user->assignRole($role);
+//        $user->assignRole($role);
 
         return $user;
     }
