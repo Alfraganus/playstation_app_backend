@@ -1,11 +1,8 @@
 <?php
 namespace App\Http\Swagger;
 
+
 /**
- * @OA\Info(
- *     version="1.0",
- *     title="Easy playstation API endpoints"
- * )
  * @OA\Post(
  *     path="/api/user/login",
  *     summary="User login",
@@ -16,8 +13,8 @@ namespace App\Http\Swagger;
  *         required=true,
  *         @OA\JsonContent(
  *             required={"username", "password"},
- *             @OA\Property(property="username", type="string", example="johndoe"),
- *             @OA\Property(property="password", type="string", example="password123")
+ *             @OA\Property(property="username", type="string", example="alfra"),
+ *             @OA\Property(property="password", type="string", example="1234")
  *         )
  *     ),
  *     @OA\Response(

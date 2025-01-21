@@ -49,13 +49,14 @@ class  AuthController extends Controller
 
         $user = User::where('username', $request->input('username'))->first();
 
-        if ($user && Hash::check($request->input('password'), $user->password)) {
-            $token = $user->createToken('API Token')->plainTextToken;
-
+        if (Auth::attempt(['username' => $request->input('username'), 'password' => $request->input('password')])) {
+//            if ($user && Hash::check($request->input('password'), $user->password)) {
+//            $token = $user->createToken('API Token')->plainTextToken;
+//            Auth::login($user);
             return response()->json([
                 'message' => 'Successfully signed in',
                 'user' => $user,
-                'token' => $token,
+                'token' =>  $request->user()->createToken('api-token'),
             ], 200);
         }
 

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\RoomClientController;
 use App\Http\Controllers\RoomController;
 use App\Services\RouteRegistrarService;
 use Illuminate\Http\Request;
@@ -16,3 +17,7 @@ Route::post('/user/register', [AuthController::class, 'registerUser']);
 
 
 RouteRegistrarService::registerCrudRoutes(RoomController::class, 'rooms');
+
+Route::middleware(['auth:sanctum'])->group(function () {
+RouteRegistrarService::registerCrudRoutes(RoomClientController::class, 'roomClient');
+});

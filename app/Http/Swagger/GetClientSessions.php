@@ -3,10 +3,10 @@ namespace App\Http\Swagger;
 
 /**
  * @OA\Get(
- *     path="/api/rooms",
+ *     path="/api/roomClient",
  *     summary="Get all rooms",
  *     tags={"Rooms"},
-
+ *     security={{"bearerAuth": {}}},
  *     @OA\Response(
  *         response=200,
  *         description="A list of rooms",
@@ -47,4 +47,4 @@ namespace App\Http\Swagger;
  *     )
  * )
  */
-class AllRoom {}
+class GetClientSessions {}

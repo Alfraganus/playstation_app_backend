@@ -1,7 +1,7 @@
 {
     "openapi": "3.0.0",
     "info": {
-        "title": "Easy playstation API endpoints",
+        "title": "Easy PlayStation API endpoints",
         "version": "1.0"
     },
     "paths": {
@@ -130,6 +130,60 @@
                 }
             }
         },
+        "/api/roomClient": {
+            "get": {
+                "tags": [
+                    "Rooms"
+                ],
+                "summary": "Get all rooms",
+                "operationId": "747d5628798b31341d7538d1a8ef501b",
+                "responses": {
+                    "200": {
+                        "description": "A list of rooms",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "description": "ID of the room",
+                                                "type": "integer",
+                                                "example": 1
+                                            },
+                                            "admin_user_id": {
+                                                "description": "ID of the admin user who owns the room",
+                                                "type": "integer",
+                                                "example": 1
+                                            },
+                                            "room_name": {
+                                                "description": "Name of the room",
+                                                "type": "string",
+                                                "example": "Conference Room A"
+                                            },
+                                            "is_active": {
+                                                "description": "Room status",
+                                                "type": "boolean",
+                                                "example": true
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No rooms found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/user/login": {
             "post": {
                 "tags": [
@@ -150,11 +204,11 @@
                                 "properties": {
                                     "username": {
                                         "type": "string",
-                                        "example": "johndoe"
+                                        "example": "alfra"
                                     },
                                     "password": {
                                         "type": "string",
-                                        "example": "password123"
+                                        "example": "1234"
                                     }
                                 },
                                 "type": "object"
@@ -445,6 +499,17 @@
                         "description": "Room not found"
                     }
                 }
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "name": "bearerAuth",
+                "in": "header",
+                "bearerFormat": "JWT",
+                "scheme": "bearer"
             }
         }
     },
