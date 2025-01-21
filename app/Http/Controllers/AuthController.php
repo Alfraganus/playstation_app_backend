@@ -1,53 +1,61 @@
 <?php
 namespace App\Http\Controllers;
+use App\Models\User;
 use App\Services\AuthService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class  AuthController extends Controller
 {
 
+    public function __construct(AuthService $authService)
+    {
+        $this->authService = $authService;
+    }
+
     public function registerUser(Request $request)
     {
-        $validatedData = $request->validate([
+       $request->validate([
             'name' => 'required|string|max:255',
             'username' => 'required|unique:users,email',
             'password' => 'required|string|min:4',
         ]);
         try {
-            $admin = AuthService::createUserWithRole($validatedData, 'admin');
+            $role = $request->input('is_admin') == 1 ? AuthService::ADMIN_ROLE : AuthService::WORKER_ROLE;
+
+            $admin =$this->authService->createUserWithRole($request->toArray(), $role);
             return response()->json([
                 'success' => true,
                 'message' => 'Admin user registered successfully.',
                 'data' => $admin,
-            ], 201); // 201 status code for created resources
+            ], 201);
         } catch (\Exception $e) {
-            // Return error response
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to register admin user.',
                 'error' => $e->getMessage(),
-            ], 500); // 500 status code for server error
+            ], 500);
         }
     }
 
 
     public function signIn(Request $request)
     {
-     $request->validate([
+        $request->validate([
             'username' => 'required|string',
             'password' => 'required',
         ]);
 
-        if (Auth::attempt([
-            'username' => $request->input('username'),
-            'password' => $request->input('password')
-        ])) {
-            $request->session()->regenerate();
+        $user = User::where('username', $request->input('username'))->first();
+
+        if ($user && Hash::check($request->input('password'), $user->password)) {
+            $token = $user->createToken('API Token')->plainTextToken;
 
             return response()->json([
                 'message' => 'Successfully signed in',
-                'user' => Auth::user(),
+                'user' => $user,
+                'token' => $token,
             ], 200);
         }
 

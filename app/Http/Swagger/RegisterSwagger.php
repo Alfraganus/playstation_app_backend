@@ -14,6 +14,8 @@ namespace App\Http\Swagger;
  *             @OA\Property(property="name", type="string", example="John Doe"),
  *             @OA\Property(property="username", type="string", format="email", example="alfra"),
  *             @OA\Property(property="password", type="string", format="password", example="1234"),
+ *             @OA\Property(property="is_admin", type="string",  example="1"),
+ *             @OA\Property(property="admin_id", type="string"),
  *         )
  *     ),
  *     @OA\Response(

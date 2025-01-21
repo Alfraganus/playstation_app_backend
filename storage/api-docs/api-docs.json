@@ -5,34 +5,156 @@
         "version": "1.0"
     },
     "paths": {
-        "/api/oauth/create-user-by-email": {
+        "/api/rooms": {
+            "get": {
+                "tags": [
+                    "Rooms"
+                ],
+                "summary": "Get all rooms",
+                "operationId": "735a264b603b9ed72ba8fea85ad8dd45",
+                "responses": {
+                    "200": {
+                        "description": "A list of rooms",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "description": "ID of the room",
+                                                "type": "integer",
+                                                "example": 1
+                                            },
+                                            "admin_user_id": {
+                                                "description": "ID of the admin user who owns the room",
+                                                "type": "integer",
+                                                "example": 1
+                                            },
+                                            "room_name": {
+                                                "description": "Name of the room",
+                                                "type": "string",
+                                                "example": "Conference Room A"
+                                            },
+                                            "is_active": {
+                                                "description": "Room status",
+                                                "type": "boolean",
+                                                "example": true
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No rooms found"
+                    }
+                }
+            },
             "post": {
                 "tags": [
-                    "Auth"
+                    "Rooms"
                 ],
-                "summary": "Create a new user by email",
-                "operationId": "fc6ee2d95b07bd91bfce257a6c429da0",
+                "summary": "Create a new room",
+                "operationId": "e9eb319a04ef09140900850b3b303d08",
                 "requestBody": {
                     "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
+                                "required": [
+                                    "admin_user_id",
+                                    "room_name",
+                                    "is_active"
+                                ],
                                 "properties": {
-                                    "type_user": {
-                                        "type": "string",
-                                        "example": "email"
+                                    "admin_user_id": {
+                                        "description": "ID of the admin user who owns the room",
+                                        "type": "integer",
+                                        "example": 1
                                     },
-                                    "email": {
+                                    "room_name": {
+                                        "description": "Name of the room",
                                         "type": "string",
-                                        "example": "futureinventor@umail.uz"
+                                        "example": "Conference Room A"
                                     },
-                                    "name": {
+                                    "is_active": {
+                                        "description": "Room status",
+                                        "type": "boolean",
+                                        "example": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Room created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "description": "ID of the created room",
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "admin_user_id": {
+                                            "description": "Admin user ID",
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "room_name": {
+                                            "description": "Room name",
+                                            "type": "string",
+                                            "example": "Conference Room A"
+                                        },
+                                        "is_active": {
+                                            "description": "Room status",
+                                            "type": "boolean",
+                                            "example": true
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid input data"
+                    }
+                }
+            }
+        },
+        "/api/user/login": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "User login",
+                "description": "Authenticate a user with their username and password",
+                "operationId": "signIn",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "username",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "username": {
                                         "type": "string",
-                                        "example": "Alfra"
+                                        "example": "johndoe"
                                     },
                                     "password": {
                                         "type": "string",
-                                        "example": "123456"
+                                        "example": "password123"
                                     }
                                 },
                                 "type": "object"
@@ -42,35 +164,31 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "User created successfully",
+                        "description": "Successful login",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "data": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Successfully signed in"
+                                        },
+                                        "user": {
                                             "properties": {
-                                                "type_user": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "username": {
                                                     "type": "string",
-                                                    "example": "admin"
+                                                    "example": "johndoe"
                                                 },
                                                 "email": {
                                                     "type": "string",
-                                                    "example": "user@example.com"
-                                                },
-                                                "name": {
-                                                    "type": "string",
-                                                    "example": "john_doe"
-                                                },
-                                                "password": {
-                                                    "type": "string",
-                                                    "example": "hashed_password"
+                                                    "example": "johndoe@example.com"
                                                 }
                                             },
                                             "type": "object"
-                                        },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "User created successfully."
                                         }
                                     },
                                     "type": "object"
@@ -78,21 +196,34 @@
                             }
                         }
                     },
-                    "400": {
+                    "401": {
+                        "description": "Invalid credentials",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Invalid credentials"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
                         "description": "Validation error",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The username field is required."
+                                        },
                                         "errors": {
                                             "properties": {
-                                                "email": {
-                                                    "type": "array",
-                                                    "items": {
-                                                        "type": "string",
-                                                        "example": "The email field is required."
-                                                    }
-                                                },
                                                 "username": {
                                                     "type": "array",
                                                     "items": {
@@ -109,25 +240,6 @@
                                                 }
                                             },
                                             "type": "object"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "errors": {
-                                            "type": "array",
-                                            "items": {
-                                                "type": "string",
-                                                "example": "Unexpected error occurred."
-                                            }
                                         }
                                     },
                                     "type": "object"
@@ -171,6 +283,13 @@
                                         "type": "string",
                                         "format": "password",
                                         "example": "1234"
+                                    },
+                                    "is_admin": {
+                                        "type": "string",
+                                        "example": "1"
+                                    },
+                                    "admin_id": {
+                                        "type": "string"
                                     }
                                 },
                                 "type": "object"
@@ -269,9 +388,71 @@
                     }
                 }
             }
+        },
+        "/api/rooms/{id}": {
+            "get": {
+                "tags": [
+                    "Rooms"
+                ],
+                "summary": "Get a room by ID",
+                "operationId": "b1e1f7545f329e1b8a09ef845ab970da",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the room",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Details of the room",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "description": "ID of the room",
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "admin_user_id": {
+                                            "description": "ID of the admin user who owns the room",
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "room_name": {
+                                            "description": "Name of the room",
+                                            "type": "string",
+                                            "example": "Conference Room A"
+                                        },
+                                        "is_active": {
+                                            "description": "Room status",
+                                            "type": "boolean",
+                                            "example": true
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Room not found"
+                    }
+                }
+            }
         }
     },
     "tags": [
+        {
+            "name": "Rooms",
+            "description": "Rooms"
+        },
         {
             "name": "Auth",
             "description": "Auth"
